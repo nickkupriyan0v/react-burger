@@ -1,9 +1,11 @@
 import { ingredientTypeMapping } from '@/utils/constants';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { IngredientType, type TIngredient, type TTab } from '@utils/types';
 
-import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
+import { BurgerIngredientSection } from '../burger-ingredient-section/burger-ingredient-section';
+import { IngredientDetails } from '../ingredient-details/ingredient-details';
+import { Modal } from '../modal/modal';
 import { Tabs } from '../tabs/tabs';
 import { groupByType } from './helpers';
 
@@ -23,6 +25,8 @@ export const BurgerIngredients = ({
 }: TBurgerIngredientsProps): React.JSX.Element => {
   const sections = useMemo(() => groupByType(ingredients), [ingredients]);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
+
   const handleTabs = (tab: TTab): void => {
     sectionRefs.current[tab.id]?.scrollIntoView({
       behavior: 'smooth',
@@ -31,28 +35,32 @@ export const BurgerIngredients = ({
   };
 
   return (
-    <section className={styles.burger_ingredients}>
-      <Tabs tabs={tabs} onChange={handleTabs} />
-      <section className={styles.ingredients_list}>
-        {sections.map((section) => (
-          <article
-            key={section.type}
-            ref={(el) => {
-              sectionRefs.current[section.type] = el;
-            }}
-            id={section.type}
-          >
-            <h3 className="text text_type_main-medium">
-              {ingredientTypeMapping[section.type]}
-            </h3>
-            <ul className={styles.burger_sections}>
-              {section.ingredients.map((ingredient) => (
-                <BurgerIngredient key={ingredient._id} ingredient={ingredient} />
-              ))}
-            </ul>
-          </article>
-        ))}
+    <>
+      <section className={styles.burger_ingredients}>
+        <Tabs tabs={tabs} onChange={handleTabs} />
+        <section className={styles.sections_list}>
+          {sections.map((section) => (
+            <BurgerIngredientSection
+              key={section.type}
+              ref={(el) => {
+                sectionRefs.current[section.type] = el;
+              }}
+              type={section.type}
+              ingredients={section.ingredients}
+              onIngredientClick={setSelectedIngredient}
+            />
+          ))}
+        </section>
       </section>
-    </section>
+      {selectedIngredient && (
+        <Modal
+          open={Boolean(selectedIngredient)}
+          onClose={() => setSelectedIngredient(null)}
+          title="Детали ингредиента"
+        >
+          <IngredientDetails ingredient={selectedIngredient} />
+        </Modal>
+      )}
+    </>
   );
 };

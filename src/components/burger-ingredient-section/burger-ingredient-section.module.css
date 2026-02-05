@@ -1,0 +1,7 @@
+.ingredients_list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin: initial;
+  padding: 24px 16px 40px;
+}

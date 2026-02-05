@@ -14,6 +14,7 @@ export const App = (): React.JSX.Element => {
   const { data, loading, error, refetch } = useFetch<{ data: TIngredient[] }>(
     `${API_DOMAIN}/api/ingredients`
   );
+
   if (loading) {
     return (
       <section className={styles.preloader}>
@@ -25,7 +26,12 @@ export const App = (): React.JSX.Element => {
     return (
       <section className={styles.error}>
         <p>Произошла ошибка</p>
-        <Button htmlType="button" onClick={void refetch}>
+        <Button
+          htmlType="button"
+          onClick={() => {
+            void refetch();
+          }}
+        >
           Обновить
         </Button>
       </section>

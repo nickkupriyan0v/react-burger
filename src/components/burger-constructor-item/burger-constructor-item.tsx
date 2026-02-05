@@ -20,7 +20,9 @@ export const BurgerConstructorItem = ({
 }: TBurgerConstructorItemProps): React.JSX.Element => {
   return (
     <li className={styles.burger_constructor_item}>
-      <DragIcon type="primary" />
+      <div className={styles.handle}>
+        {isLocked ? null : <DragIcon type="primary" />}
+      </div>
       <ConstructorElement
         isLocked={isLocked}
         type={type}
