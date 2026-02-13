@@ -15,9 +15,21 @@
 
 .main {
   display: flex;
+  flex: 1;
   justify-content: space-between;
   width: 1240px;
   height: 100%;
   margin: 0 auto;
+  padding: 20px;
   overflow: hidden;
+}
+
+.preloader,
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
 }

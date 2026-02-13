@@ -1,0 +1,23 @@
+.modal {
+  position: relative;
+  min-width: 320px;
+  max-width: 90%;
+  max-height: 90%;
+  padding: 40px;
+  overflow-y: auto;
+  background: #1c1c21;
+  border-radius: 40px;
+}
+
+.modal_header {
+  display: flex;
+  align-items: center;
+}
+
+.modal_title {
+  flex-grow: 1;
+}
+
+.modal_close:hover {
+  cursor: pointer;
+}

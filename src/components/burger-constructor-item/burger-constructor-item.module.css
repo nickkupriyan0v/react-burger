@@ -1,0 +1,17 @@
+.burger_constructor_item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.handle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  min-width: 24px;
+}
+
+.handle:hover {
+  cursor: grab;
+}
