@@ -1,13 +1,16 @@
+import { clearSelectedIngredient, selectIngredient } from '@/services/modal-ingredient';
 import { ingredientTypeMapping } from '@/utils/constants';
-import { useMemo, useRef, useState } from 'react';
-
-import { IngredientType, type TIngredient, type TTab } from '@utils/types';
+import { IngredientType, type TIngredient, type TTab } from '@/utils/types';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { BurgerIngredientSection } from '../burger-ingredient-section/burger-ingredient-section';
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
 import { Tabs } from '../tabs/tabs';
 import { groupByType } from './helpers';
+
+import type { RootState } from '@/services/store';
 
 import styles from './burger-ingredients.module.css';
 
@@ -23,31 +26,77 @@ type TBurgerIngredientsProps = {
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
+  const dispatch = useDispatch();
+  const selectedIngredient = useSelector(
+    (state: RootState) => state.modalIngredient.selectedIngredient
+  );
+
+  const [activeTab, setActiveTab] = useState<TTab>(tabs[0]);
   const sections = useMemo(() => groupByType(ingredients), [ingredients]);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
-  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
+  const titleRefs = useRef<Record<string, HTMLHeadingElement | null>>({});
+  const containerRef = useRef<HTMLElement | null>(null);
+
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current) return;
+
+    const containerTop = containerRef.current.getBoundingClientRect().top;
+    let closestTab = tabs[0];
+    let closestDistance = Infinity;
+
+    tabs.forEach((tab) => {
+      const titleElement = titleRefs.current[tab.id];
+      if (!titleElement) return;
+
+      const titleTop = titleElement.getBoundingClientRect().top;
+      const distance = Math.abs(titleTop - containerTop);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestTab = tab;
+      }
+    });
+
+    setActiveTab(closestTab);
+  }, []);
 
   const handleTabs = (tab: TTab): void => {
+    setActiveTab(tab);
     sectionRefs.current[tab.id]?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });
   };
 
+  const handleIngredientClick = (ingredient: TIngredient): void => {
+    dispatch(selectIngredient(ingredient));
+  };
+
+  const handleCloseModal = (): void => {
+    dispatch(clearSelectedIngredient());
+  };
+
   return (
     <>
       <section className={styles.burger_ingredients}>
-        <Tabs tabs={tabs} onChange={handleTabs} />
-        <section className={styles.sections_list}>
+        <Tabs tabs={tabs} onChange={handleTabs} active={activeTab} />
+        <section
+          ref={containerRef}
+          onScroll={handleScroll}
+          className={styles.sections_list}
+        >
           {sections.map((section) => (
             <BurgerIngredientSection
               key={section.type}
               ref={(el) => {
                 sectionRefs.current[section.type] = el;
               }}
+              titleRef={(el) => {
+                titleRefs.current[section.type] = el;
+              }}
               type={section.type}
               ingredients={section.ingredients}
-              onIngredientClick={setSelectedIngredient}
+              onIngredientClick={handleIngredientClick}
             />
           ))}
         </section>
@@ -55,7 +104,7 @@ export const BurgerIngredients = ({
       {selectedIngredient && (
         <Modal
           open={Boolean(selectedIngredient)}
-          onClose={() => setSelectedIngredient(null)}
+          onClose={handleCloseModal}
           title="Детали ингредиента"
         >
           <IngredientDetails ingredient={selectedIngredient} />

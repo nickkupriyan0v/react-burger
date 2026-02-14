@@ -22,3 +22,15 @@ export type TIngredient = {
 };
 
 export type TTab = { title: string; id: string };
+
+export type TOrder = {
+  name: string;
+  order: {
+    number: number;
+  };
+  success: boolean;
+};
+
+export type TOrderRequest = {
+  ingredients: string[];
+};

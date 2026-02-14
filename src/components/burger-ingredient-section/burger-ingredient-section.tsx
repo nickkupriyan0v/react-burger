@@ -1,4 +1,5 @@
 import { ingredientTypeMapping } from '@/utils/constants';
+import { forwardRef } from 'react';
 
 import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
 
@@ -10,27 +11,34 @@ type TBurgerIngredientSectionProps = {
   type: TIngredientType;
   ingredients: TIngredient[];
   onIngredientClick: (ingredient: TIngredient) => void;
-  ref?: React.Ref<HTMLElement>;
+  titleRef?: React.Ref<HTMLHeadingElement>;
 };
 
-export const BurgerIngredientSection = ({
-  type,
-  ingredients,
-  onIngredientClick,
-  ref,
-}: TBurgerIngredientSectionProps): React.JSX.Element => {
-  return (
-    <article ref={ref} id={type}>
-      <h3 className="text text_type_main-medium">{ingredientTypeMapping[type]}</h3>
-      <ul className={styles.ingredients_list}>
-        {ingredients.map((ingredient) => (
-          <BurgerIngredient
-            key={ingredient._id}
-            ingredient={ingredient}
-            onIngredientClick={onIngredientClick}
-          />
-        ))}
-      </ul>
-    </article>
-  );
-};
+export const BurgerIngredientSection = forwardRef<
+  HTMLElement,
+  TBurgerIngredientSectionProps
+>(
+  (
+    { type, ingredients, onIngredientClick, titleRef }: TBurgerIngredientSectionProps,
+    ref
+  ): React.JSX.Element => {
+    return (
+      <article ref={ref} id={type}>
+        <h3 ref={titleRef} className="text text_type_main-medium">
+          {ingredientTypeMapping[type]}
+        </h3>
+        <ul className={styles.ingredients_list}>
+          {ingredients.map((ingredient) => (
+            <BurgerIngredient
+              key={ingredient._id}
+              ingredient={ingredient}
+              onIngredientClick={onIngredientClick}
+            />
+          ))}
+        </ul>
+      </article>
+    );
+  }
+);
+
+BurgerIngredientSection.displayName = 'BurgerIngredientSection';

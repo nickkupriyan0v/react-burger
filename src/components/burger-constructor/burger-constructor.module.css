@@ -6,6 +6,8 @@
   padding: 56px 16px 40px;
   overflow: hidden;
   color: var(--text-primary-color);
+  border-radius: 8px;
+  transition: border-color 0.3s;
 }
 
 .burger_constructor_items {
