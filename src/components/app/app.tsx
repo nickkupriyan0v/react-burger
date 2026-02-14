@@ -8,7 +8,7 @@ import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredi
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
-  const { data: ingredients, isLoading, isError } = useGetIngredientsQuery({});
+  const { isLoading, isError } = useGetIngredientsQuery({});
 
   if (isLoading) {
     return (
@@ -31,7 +31,7 @@ export const App = (): React.JSX.Element => {
         Соберите бургер
       </h1>
       <main className={`${styles.main} pl-5 pr-5`}>
-        <BurgerIngredients ingredients={ingredients ?? []} />
+        <BurgerIngredients />
         <BurgerConstructor />
       </main>
     </div>

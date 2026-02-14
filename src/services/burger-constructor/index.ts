@@ -3,6 +3,7 @@ import { nanoid } from '@reduxjs/toolkit';
 
 import type { RootState } from '@/services/store';
 import type { TIngredient } from '@/utils/types';
+import type { Dispatch } from 'redux';
 
 export type TConstructorIngredient = TIngredient & {
   uniqueKey: string;
@@ -22,12 +23,8 @@ const burgerConstructorSlice = createSlice({
   name: 'burgerConstructor',
   initialState,
   reducers: {
-    addIngredient: (state, action: PayloadAction<TIngredient>) => {
-      const ingredientWithKey: TConstructorIngredient = {
-        ...action.payload,
-        uniqueKey: nanoid(),
-      };
-      state.ingredients.push(ingredientWithKey);
+    addIngredient: (state, action: PayloadAction<TConstructorIngredient>) => {
+      state.ingredients.push(action.payload);
     },
     removeIngredient: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
@@ -45,11 +42,31 @@ const burgerConstructorSlice = createSlice({
       const [movedItem] = state.ingredients.splice(fromIndex, 1);
       state.ingredients.splice(toIndex, 0, movedItem);
     },
+    clearConstructor: (state) => {
+      state.ingredients = [];
+      state.bun = null;
+    },
   },
 });
 
-export const { addIngredient, removeIngredient, setBun, moveIngredient } =
-  burgerConstructorSlice.actions;
+export const {
+  addIngredient: addIngredientAction,
+  removeIngredient,
+  setBun,
+  moveIngredient,
+  clearConstructor,
+} = burgerConstructorSlice.actions;
+
+export const addIngredient = (ingredient: TIngredient) => {
+  return (dispatch: Dispatch): void => {
+    const ingredientWithKey: TConstructorIngredient = {
+      ...ingredient,
+      uniqueKey: nanoid(),
+    };
+    dispatch(addIngredientAction(ingredientWithKey));
+  };
+};
+
 export default burgerConstructorSlice.reducer;
 
 export const selectTotalPrice = (state: RootState): number => {

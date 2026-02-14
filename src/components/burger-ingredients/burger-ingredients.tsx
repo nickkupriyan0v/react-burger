@@ -1,16 +1,15 @@
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { useGetIngredientsQuery } from '@/services/ingredients';
 import { clearSelectedIngredient, selectIngredient } from '@/services/modal-ingredient';
 import { ingredientTypeMapping } from '@/utils/constants';
 import { IngredientType, type TIngredient, type TTab } from '@/utils/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { BurgerIngredientSection } from '../burger-ingredient-section/burger-ingredient-section';
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
 import { Tabs } from '../tabs/tabs';
 import { groupByType } from './helpers';
-
-import type { RootState } from '@/services/store';
 
 import styles from './burger-ingredients.module.css';
 
@@ -19,16 +18,11 @@ const tabs: TTab[] = Object.values(IngredientType).map((value) => ({
   title: ingredientTypeMapping[value],
 }));
 
-type TBurgerIngredientsProps = {
-  ingredients: TIngredient[];
-};
-
-export const BurgerIngredients = ({
-  ingredients,
-}: TBurgerIngredientsProps): React.JSX.Element => {
-  const dispatch = useDispatch();
-  const selectedIngredient = useSelector(
-    (state: RootState) => state.modalIngredient.selectedIngredient
+export const BurgerIngredients = (): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { data: ingredients = [] } = useGetIngredientsQuery({});
+  const selectedIngredient = useAppSelector(
+    (state) => state.modalIngredient.selectedIngredient
   );
 
   const [activeTab, setActiveTab] = useState<TTab>(tabs[0]);

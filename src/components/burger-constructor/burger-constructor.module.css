@@ -17,3 +17,15 @@
   gap: 16px;
   overflow: auto;
 }
+
+.burger_constructor_items > li:first-child {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.burger_constructor_items > li:last-child {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}

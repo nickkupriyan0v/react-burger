@@ -1,3 +1,4 @@
+import { useAppDispatch } from '@/hooks/redux';
 import { removeIngredient, moveIngredient } from '@/services/burger-constructor';
 import {
   ConstructorElement,
@@ -5,9 +6,7 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { useDispatch } from 'react-redux';
 
-import type { AppDispatch } from '@/services/store';
 import type { TIngredient } from '@/utils/types';
 
 import styles from './burger-constructor-item.module.css';
@@ -30,7 +29,7 @@ export const BurgerConstructorItem = ({
   type,
   index = -1,
 }: TBurgerConstructorItemProps): React.JSX.Element => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLLIElement>(null);
 
   const [{ isDragging }, drag] = useDrag(
@@ -86,6 +85,16 @@ export const BurgerConstructorItem = ({
     }
   };
 
+  const getBunText = (): string => {
+    if (type === 'top') {
+      return `${ingredient.name} (верх)`;
+    }
+    if (type === 'bottom') {
+      return `${ingredient.name} (низ)`;
+    }
+    return ingredient.name;
+  };
+
   return (
     <li
       ref={ref}
@@ -102,7 +111,7 @@ export const BurgerConstructorItem = ({
       <ConstructorElement
         isLocked={isLocked}
         type={type}
-        text={ingredient.name}
+        text={getBunText()}
         price={ingredient.price}
         thumbnail={ingredient.image}
         handleClose={!isLocked ? handleRemove : undefined}

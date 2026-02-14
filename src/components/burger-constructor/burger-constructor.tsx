@@ -1,14 +1,12 @@
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { addIngredient, setBun } from '@/services/burger-constructor';
 import { IngredientType, type TIngredient } from '@/utils/types';
 import { useRef } from 'react';
 import { useDrop } from 'react-dnd';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { BurgerConstructorItem } from '../burger-constructor-item/burger-constructor-item';
 import { BurgerConstructorOrder } from '../burger-constructor-order/burger-constructor-order';
 import { EmptyState } from '../empty-state/empty-state';
-
-import type { AppDispatch, RootState } from '@/services/store';
 
 import styles from './burger-constructor.module.css';
 
@@ -19,10 +17,8 @@ type DragItem = {
 };
 
 export const BurgerConstructor = (): React.JSX.Element => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { bun, ingredients } = useSelector(
-    (state: RootState) => state.burgerConstructor
-  );
+  const dispatch = useAppDispatch();
+  const { bun, ingredients } = useAppSelector((state) => state.burgerConstructor);
 
   const sectionRef = useRef<HTMLElement>(null);
   const ulRef = useRef<HTMLUListElement>(null);

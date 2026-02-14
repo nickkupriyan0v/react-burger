@@ -1,23 +1,21 @@
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { useTotalPrice } from '@/hooks/useTotalPrice';
+import { clearConstructor } from '@/services/burger-constructor';
 import { useCreateOrderMutation } from '@/services/orders';
 import { Button } from '@krgaa/react-developer-burger-ui-components';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';
 import { Price } from '../price/price';
 
-import type { RootState } from '@/services/store';
-
 import styles from './burger-constructor-order.module.css';
 
 export const BurgerConstructorOrder = (): React.JSX.Element => {
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const [orderNumber, setOrderNumber] = useState<number | null>(null);
-  const { bun, ingredients } = useSelector(
-    (state: RootState) => state.burgerConstructor
-  );
+  const { bun, ingredients } = useAppSelector((state) => state.burgerConstructor);
   const totalPrice = useTotalPrice();
   const [createOrder, { isLoading, isError, error }] = useCreateOrderMutation();
 
@@ -33,17 +31,17 @@ export const BurgerConstructorOrder = (): React.JSX.Element => {
       .then((response: { order: { number: number } }) => {
         setOrderNumber(response.order.number);
         setOpen(true);
+        dispatch(clearConstructor());
       })
       .catch((err: unknown) => {
         console.error('Ошибка при создании заказа:', err);
       });
   };
 
-  useEffect(() => {
-    if (!open) {
-      setOrderNumber(null);
-    }
-  }, [open]);
+  const handleCloseModal = (): void => {
+    setOpen(false);
+    setOrderNumber(null);
+  };
 
   return (
     <div className={styles.burger_constructor_order}>
@@ -65,7 +63,7 @@ export const BurgerConstructorOrder = (): React.JSX.Element => {
             : 'Ошибка при создании заказа'}
         </p>
       )}
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal open={open} onClose={handleCloseModal}>
         <OrderDetails orderNumber={orderNumber} />
       </Modal>
     </div>

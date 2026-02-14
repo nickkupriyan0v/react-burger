@@ -1,12 +1,10 @@
+import { useAppSelector } from '@/hooks/redux';
 import { IngredientType, type TIngredient } from '@/utils/types';
 import { Counter } from '@krgaa/react-developer-burger-ui-components';
 import { useMemo, useRef } from 'react';
 import { useDrag } from 'react-dnd';
-import { useSelector } from 'react-redux';
 
 import { Price } from '../price/price';
-
-import type { RootState } from '@/services/store';
 
 import styles from './burger-ingredient.module.css';
 
@@ -19,9 +17,7 @@ export const BurgerIngredient = ({
   ingredient,
   onIngredientClick,
 }: TBurgerIngredientProps): React.JSX.Element => {
-  const { bun, ingredients } = useSelector(
-    (state: RootState) => state.burgerConstructor
-  );
+  const { bun, ingredients } = useAppSelector((state) => state.burgerConstructor);
 
   const ref = useRef<HTMLDivElement>(null);
 
