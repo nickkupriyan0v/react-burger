@@ -6,6 +6,8 @@
   padding: 56px 16px 40px;
   overflow: hidden;
   color: var(--text-primary-color);
+  border-radius: 8px;
+  transition: border-color 0.3s;
 }
 
 .burger_constructor_items {
@@ -14,4 +16,16 @@
   flex-direction: column;
   gap: 16px;
   overflow: auto;
+}
+
+.burger_constructor_items > li:first-child {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.burger_constructor_items > li:last-child {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }

@@ -1,35 +1,76 @@
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { addIngredient, setBun } from '@/services/burger-constructor';
+import { IngredientType, type TIngredient } from '@/utils/types';
+import { useRef } from 'react';
+import { useDrop } from 'react-dnd';
+
 import { BurgerConstructorItem } from '../burger-constructor-item/burger-constructor-item';
 import { BurgerConstructorOrder } from '../burger-constructor-order/burger-constructor-order';
-
-import type { TIngredient } from '@utils/types';
+import { EmptyState } from '../empty-state/empty-state';
 
 import styles from './burger-constructor.module.css';
 
-type TBurgerConstructorProps = {
-  ingredients: TIngredient[];
+type DragItem = {
+  ingredient?: TIngredient;
+  type?: string;
+  index?: number;
 };
 
-export const BurgerConstructor = ({
-  ingredients,
-}: TBurgerConstructorProps): React.JSX.Element => {
+export const BurgerConstructor = (): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { bun, ingredients } = useAppSelector((state) => state.burgerConstructor);
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const ulRef = useRef<HTMLUListElement>(null);
+
+  const [{ isOver }, drop] = useDrop(
+    () => ({
+      accept: 'ingredient-list',
+      drop: (item: DragItem): void => {
+        if (item.ingredient) {
+          const ingredient = item.ingredient;
+          if (ingredient.type === IngredientType.Bun) {
+            dispatch(setBun(ingredient));
+          } else {
+            dispatch(addIngredient(ingredient));
+          }
+        }
+      },
+      collect: (monitor): { isOver: boolean } => ({
+        isOver: monitor.isOver(),
+      }),
+    }),
+    [dispatch]
+  );
+
+  drop(sectionRef);
+
+  const isEmpty = !bun && !ingredients.length;
+
   return (
-    <section className={styles.burger_constructor}>
-      <ul className={styles.burger_constructor_items}>
-        {ingredients.map((ingredient, index) => (
-          <BurgerConstructorItem
-            key={ingredient._id}
-            ingredient={ingredient}
-            isLocked={index === 0 || index === ingredients.length - 1}
-            type={
-              index === 0
-                ? 'top'
-                : index === ingredients.length - 1
-                  ? 'bottom'
-                  : undefined
-            }
-          />
-        ))}
-      </ul>
+    <section
+      ref={sectionRef}
+      className={styles.burger_constructor}
+      style={{
+        border: isOver ? '2px dashed #4c4c4c' : '2px dashed transparent',
+      }}
+    >
+      {isEmpty ? (
+        <EmptyState />
+      ) : (
+        <ul ref={ulRef} className={styles.burger_constructor_items}>
+          {bun && <BurgerConstructorItem ingredient={bun} isLocked type="top" />}
+          {ingredients.map((ingredient, index) => (
+            <BurgerConstructorItem
+              key={ingredient.uniqueKey}
+              ingredient={ingredient}
+              index={index}
+            />
+          ))}
+          {bun && <BurgerConstructorItem ingredient={bun} isLocked type="bottom" />}
+        </ul>
+      )}
+
       <BurgerConstructorOrder />
     </section>
   );
