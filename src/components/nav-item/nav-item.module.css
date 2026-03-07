@@ -1,0 +1,19 @@
+.nav_item {
+  padding: 16px 0;
+}
+
+.nav_item:hover {
+  cursor: pointer;
+}
+
+.nav_link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav_link_active {
+  color: #fff;
+}

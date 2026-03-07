@@ -1,13 +1,10 @@
-import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { useGetIngredientsQuery } from '@/services/ingredients';
-import { clearSelectedIngredient, selectIngredient } from '@/services/modal-ingredient';
 import { ingredientTypeMapping } from '@/utils/constants';
 import { IngredientType, type TIngredient, type TTab } from '@/utils/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { BurgerIngredientSection } from '../burger-ingredient-section/burger-ingredient-section';
-import { IngredientDetails } from '../ingredient-details/ingredient-details';
-import { Modal } from '../modal/modal';
 import { Tabs } from '../tabs/tabs';
 import { groupByType } from './helpers';
 
@@ -19,11 +16,9 @@ const tabs: TTab[] = Object.values(IngredientType).map((value) => ({
 }));
 
 export const BurgerIngredients = (): React.JSX.Element => {
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { data: ingredients = [] } = useGetIngredientsQuery({});
-  const selectedIngredient = useAppSelector(
-    (state) => state.modalIngredient.selectedIngredient
-  );
 
   const [activeTab, setActiveTab] = useState<TTab>(tabs[0]);
   const sections = useMemo(() => groupByType(ingredients), [ingredients]);
@@ -63,11 +58,9 @@ export const BurgerIngredients = (): React.JSX.Element => {
   };
 
   const handleIngredientClick = (ingredient: TIngredient): void => {
-    dispatch(selectIngredient(ingredient));
-  };
-
-  const handleCloseModal = (): void => {
-    dispatch(clearSelectedIngredient());
+    void navigate(`/ingredients/${ingredient._id}`, {
+      state: { background: location },
+    });
   };
 
   return (
@@ -95,15 +88,6 @@ export const BurgerIngredients = (): React.JSX.Element => {
           ))}
         </section>
       </section>
-      {selectedIngredient && (
-        <Modal
-          open={Boolean(selectedIngredient)}
-          onClose={handleCloseModal}
-          title="Детали ингредиента"
-        >
-          <IngredientDetails ingredient={selectedIngredient} />
-        </Modal>
-      )}
     </>
   );
 };
