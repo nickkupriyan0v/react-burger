@@ -6,24 +6,6 @@
   background-color: var(--background-alt);
 }
 
-.title {
-  width: 100%;
-  max-width: 1260px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.main {
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-  width: 1240px;
-  height: 100%;
-  margin: 0 auto;
-  padding: 20px;
-  overflow: hidden;
-}
-
 .preloader,
 .error {
   display: flex;

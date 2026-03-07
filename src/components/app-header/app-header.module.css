@@ -13,6 +13,7 @@
 .menu_part_left {
   display: flex;
   flex-basis: 35%;
+  gap: 20px;
 }
 
 .link {

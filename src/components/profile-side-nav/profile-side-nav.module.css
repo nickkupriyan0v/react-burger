@@ -1,0 +1,17 @@
+.profile_side_nav {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  width: 320px;
+}
+
+.nav_list {
+  margin: initial;
+  padding: initial;
+  list-style: none;
+}
+
+.logout {
+  padding: 16px 0;
+  cursor: pointer;
+}

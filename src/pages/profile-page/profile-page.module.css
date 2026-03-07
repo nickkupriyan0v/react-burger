@@ -1,0 +1,7 @@
+.profile_page {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  width: 860px;
+  margin: 120px auto;
+}

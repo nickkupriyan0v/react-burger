@@ -1,0 +1,11 @@
+.profile_info_page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
