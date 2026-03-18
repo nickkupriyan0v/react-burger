@@ -1,7 +1,10 @@
-import { API_DOMAIN } from '@/utils/api';
-import { createSlice, type PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+
+import { checkAuth } from './asyncThunks';
 
 import type { TUser } from '@/utils/types';
+
+export { checkAuth };
 
 type AuthState = {
   user: TUser | null;
@@ -20,47 +23,6 @@ const initialState: AuthState = {
   isInitialized: false,
   isInitializing: false,
 };
-
-export const checkAuth = createAsyncThunk<void, void, { rejectValue: string }>(
-  'auth/checkAuth',
-  async (_, { dispatch, rejectWithValue }) => {
-    const accessToken = localStorage.getItem('accessToken');
-
-    if (!accessToken) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_DOMAIN}/api/auth/user`, {
-        method: 'GET',
-        headers: {
-          Authorization: accessToken,
-        },
-      });
-
-      if (!response.ok) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
-        return rejectWithValue('Invalid token');
-      }
-
-      const data = (await response.json()) as { success: boolean; user: TUser };
-
-      if (data.success && data.user) {
-        const refreshToken = localStorage.getItem('refreshToken');
-        if (refreshToken) {
-          dispatch(setAuthTokens({ user: data.user, accessToken, refreshToken }));
-        }
-      }
-    } catch {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      return rejectWithValue('Failed to check auth');
-    }
-  }
-);
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -118,9 +80,19 @@ export const authSlice = createSlice({
       .addCase(checkAuth.pending, (state) => {
         state.isInitializing = true;
       })
-      .addCase(checkAuth.fulfilled, (state) => {
+      .addCase(checkAuth.fulfilled, (state, action) => {
         state.isInitialized = true;
         state.isInitializing = false;
+        if (action.payload) {
+          state.user = action.payload.user;
+          state.accessToken = action.payload.accessToken;
+          state.refreshToken = action.payload.refreshToken;
+          state.isAuthenticated = true;
+
+          localStorage.setItem('accessToken', action.payload.accessToken);
+          localStorage.setItem('refreshToken', action.payload.refreshToken);
+          localStorage.setItem('user', JSON.stringify(action.payload.user));
+        }
       })
       .addCase(checkAuth.rejected, (state) => {
         state.isInitialized = true;
