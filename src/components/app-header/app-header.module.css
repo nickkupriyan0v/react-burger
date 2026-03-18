@@ -16,16 +16,6 @@
   gap: 20px;
 }
 
-.link {
-  display: flex;
-  color: var(--text-inactive-color);
-  text-decoration: none;
-}
-
-.link_active {
-  color: var(--text-primary-color);
-}
-
 .link_position_last {
   display: flex;
   flex-basis: 35%;
