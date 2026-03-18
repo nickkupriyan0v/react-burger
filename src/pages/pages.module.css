@@ -1,0 +1,22 @@
+.form_page {
+  width: 480px;
+  margin: 180px auto;
+}
+
+.form_page_header {
+  text-align: center;
+}
+
+.form_page_content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin: 24px 0 80px;
+}
+
+.form_page_footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

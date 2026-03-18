@@ -1,0 +1,13 @@
+.helper_link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.link {
+  color: #4c4cff;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
