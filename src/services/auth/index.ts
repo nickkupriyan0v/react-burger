@@ -1,6 +1,8 @@
 import { API_DOMAIN } from '@/utils/api';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import { checkAuth } from './asyncThunks';
+
 import type {
   TAuthResponse,
   TForgotPasswordRequest,
@@ -16,6 +18,8 @@ import type {
   TUpdateUserResponse,
   TUser,
 } from '@/utils/types';
+
+export { checkAuth };
 
 export const authApi = createApi({
   reducerPath: 'authApi',
