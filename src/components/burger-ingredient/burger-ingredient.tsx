@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/hooks/redux';
 import { IngredientType, type TIngredient } from '@/utils/types';
 import { Counter } from '@krgaa/react-developer-burger-ui-components';
-import { useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { useDrag } from 'react-dnd';
 
 import { Price } from '../price/price';
@@ -13,7 +13,7 @@ type TBurgerIngredientProps = {
   onIngredientClick: (ingredient: TIngredient) => void;
 };
 
-export const BurgerIngredient = ({
+const BurgerIngredientComponent = ({
   ingredient,
   onIngredientClick,
 }: TBurgerIngredientProps): React.JSX.Element => {
@@ -60,3 +60,5 @@ export const BurgerIngredient = ({
     </div>
   );
 };
+
+export const BurgerIngredient = React.memo(BurgerIngredientComponent);
