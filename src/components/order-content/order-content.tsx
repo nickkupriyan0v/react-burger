@@ -59,9 +59,30 @@ const OrderContentComponent = ({
       .filter(Boolean);
   }, [order, allIngredients]);
 
-  const price = useMemo(() => {
-    return orderIngredients.reduce((acc, curr) => (acc += curr.price), 0);
+  const groupedIngredients = useMemo(() => {
+    const grouped = new Map<
+      string,
+      { ingredient: (typeof orderIngredients)[number]; count: number }
+    >();
+
+    orderIngredients.forEach((ingredient) => {
+      const existing = grouped.get(ingredient._id);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        grouped.set(ingredient._id, { ingredient, count: 1 });
+      }
+    });
+
+    return Array.from(grouped.values());
   }, [orderIngredients]);
+
+  const price = useMemo(() => {
+    return groupedIngredients.reduce(
+      (acc, item) => (acc += item.ingredient.price * item.count),
+      0
+    );
+  }, [groupedIngredients]);
 
   if (!id) {
     return null;
@@ -102,16 +123,20 @@ const OrderContentComponent = ({
       <div className={`${styles.composition} mb-6`}>
         <p className="text text_type_main-medium">Состав:</p>
         <div className={styles.ingredients_list}>
-          {orderIngredients.map((ingredient, idx) => (
-            <div key={idx} className={styles.ingredient_item}>
+          {groupedIngredients.map((item) => (
+            <div key={item.ingredient._id} className={styles.ingredient_item}>
               <div className={styles.ingredient_info}>
                 <IngredientPreview
-                  image={ingredient.image_mobile}
-                  name={ingredient.name}
+                  image={item.ingredient.image_mobile}
+                  name={item.ingredient.name}
                 />
-                <span className="text text_type_main-default">{ingredient.name}</span>
+                <span className="text text_type_main-default">
+                  {item.ingredient.name}
+                </span>
               </div>
-              <Price price={ingredient.price} />
+              <span className="text text_type_main-default">
+                {item.count} x <Price price={item.ingredient.price} />
+              </span>
             </div>
           ))}
         </div>
