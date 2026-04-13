@@ -6,6 +6,7 @@ import { HomePage } from '@/pages/home-page/home-page';
 import { IngredientView } from '@/pages/ingredient-view/ingredient-view';
 import { LoginPage } from '@/pages/login-page/login-page';
 import { NotFoundPage } from '@/pages/not-found-page/not-found-page';
+import { OrderView } from '@/pages/order-view/order-view';
 import { ProfileInfoPage } from '@/pages/profile-info-page/profile-info-page';
 import { ProfileOrdersPage } from '@/pages/profile-orders-page/profile-orders-page';
 import { ProfilePage } from '@/pages/profile-page/profile-page';
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: `${ROUTES.Ingredients}/:id`,
         element: <IngredientView />,
+      },
+      {
+        path: `${ROUTES.Feed}/:id`,
+        element: <OrderView />,
       },
       {
         path: ROUTES.Register,
@@ -89,6 +94,10 @@ export const router = createBrowserRouter([
           {
             path: `${ROUTES.Profile}${PROFILE_ROUTES.Orders}`,
             element: <ProfileOrdersPage />,
+          },
+          {
+            path: `${ROUTES.Profile}${PROFILE_ROUTES.Orders}/:id`,
+            element: <OrderView />,
           },
         ],
       },

@@ -1,5 +1,5 @@
 import { ingredientTypeMapping } from '@/utils/constants';
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 
 import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
 
@@ -14,7 +14,7 @@ type TBurgerIngredientSectionProps = {
   titleRef?: React.Ref<HTMLHeadingElement>;
 };
 
-export const BurgerIngredientSection = forwardRef<
+const BurgerIngredientSectionComponent = forwardRef<
   HTMLElement,
   TBurgerIngredientSectionProps
 >(
@@ -41,4 +41,6 @@ export const BurgerIngredientSection = forwardRef<
   }
 );
 
-BurgerIngredientSection.displayName = 'BurgerIngredientSection';
+BurgerIngredientSectionComponent.displayName = 'BurgerIngredientSection';
+
+export const BurgerIngredientSection = React.memo(BurgerIngredientSectionComponent);

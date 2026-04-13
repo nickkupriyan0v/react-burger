@@ -1,11 +1,13 @@
 import { CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
+import React from 'react';
 
 import styles from './price.module.css';
 
 type TPriceProps = {
   price: number;
 };
-export const Price = ({ price }: TPriceProps): React.JSX.Element => {
+
+const PriceComponent = ({ price }: TPriceProps): React.JSX.Element => {
   return (
     <div className={styles.price}>
       <span className="text text_type_digits-default">{price}</span>
@@ -13,3 +15,5 @@ export const Price = ({ price }: TPriceProps): React.JSX.Element => {
     </div>
   );
 };
+
+export const Price = React.memo(PriceComponent);

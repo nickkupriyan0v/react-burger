@@ -101,3 +101,28 @@ export type TUpdateUserResponse = {
   success: boolean;
   user: TUser;
 };
+
+export type TWSOrder = {
+  _id: string;
+  ingredients: string[];
+  status: 'done' | 'pending' | 'created';
+  name: string;
+  number: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TWSMessage = {
+  orders: TWSOrder[];
+  total: number;
+  totalToday: number;
+};
+
+export type TOrderResponse = {
+  success: boolean;
+  orders: TWSOrder[];
+};
+
+export type TWSErrorMessage = {
+  message: string;
+};

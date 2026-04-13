@@ -5,6 +5,7 @@ import {
   Logo,
   ProfileIcon,
 } from '@krgaa/react-developer-burger-ui-components';
+import { Link } from 'react-router-dom';
 
 import { NavItem } from '../nav-item/nav-item';
 
@@ -33,7 +34,9 @@ export const AppHeader = (): React.JSX.Element => {
           </NavItem>
         </div>
         <div className={styles.logo}>
-          <Logo />
+          <Link to={ROUTES.Home}>
+            <Logo />
+          </Link>
         </div>
         <div className={styles.link_position_last}>
           <NavItem to={ROUTES.Profile}>
