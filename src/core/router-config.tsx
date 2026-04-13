@@ -12,7 +12,7 @@ import { ProfileOrdersPage } from '@/pages/profile-orders-page/profile-orders-pa
 import { ProfilePage } from '@/pages/profile-page/profile-page';
 import { RegisterPage } from '@/pages/register-page/register-page';
 import { ResetPasswordPage } from '@/pages/reset-password-page/reset-password-page';
-import { createBrowserRouter } from 'react-router-dom';
+import { createHashRouter } from 'react-router-dom';
 
 export const ROUTES = {
   Home: '/',
@@ -30,7 +30,7 @@ export const PROFILE_ROUTES = {
   Orders: '/orders',
 };
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: ROUTES.Home,
     element: <App />,
